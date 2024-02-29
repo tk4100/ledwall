@@ -65,6 +65,14 @@ class Animation():
 
         return(ret)
 
+class HorizontalBars(Animation):
+    def setColors(colors):
+        self.num_bars = len(colors)
+        self.colors = colors
+        
+    def animate(self):
+        pass
+
 class SineChase(Animation):
     def setColor(self, color):
         self.c = color
