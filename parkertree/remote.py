@@ -24,12 +24,12 @@ class MessageString():
 class Server():
     def __init__(self, port, numleds=300):
         import zmq
-        from controller import DisplayController
+        from parkertree.controller import DisplayController
         self.ctx = zmq.Context()
         self.sock = self.ctx.socket(zmq.REP)
         self.sock.bind(f"tcp://*:{port}")
 
-        self.tree = DisplayController(numleds)
+        self.tree = DisplayController()
 
         self.listen()
 
