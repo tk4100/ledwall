@@ -161,6 +161,19 @@ class Strobe(TwoDAnimation):
         strobe = [ Colors.COOL_WHITE ] * 10 + [ Colors.BLACK ] * 10
         for i in range(100):
             self.drawBlankFrames(1, random.choice(strobe))
+            
+class RainbowStrobe(TwoDAnimation):
+    def animate(self):
+        color = []
+        for h in range(360):
+            r,g,b = colorsys.hsv_to_rgb(h/360.,1.0,1)
+            r = int(r*255)
+            g = int(g*255)
+            b = int(b*255)
+            color.append((r,g,b))
+            
+        for i in range(100):
+            self.drawBlankFrames(1, random.choice(color))
 
 class RainbowWipe(TwoDAnimation):
     def animate(self):
@@ -176,11 +189,6 @@ class RainbowWipe(TwoDAnimation):
             b = int(b*255)
             self.drawVerticalLine(x, barwidth, (r,g,b))
     
-class RainbowBlast(TwoDAnimation):
-    def animate(self):
-               
-            self.drawBlankFrames(1, (r,g,b))
-        
 class RainbowFade(TwoDAnimation):
     def animate(self):
         h = 55/255.

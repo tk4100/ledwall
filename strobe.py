@@ -13,7 +13,7 @@ led_data = led_db.getView(0)
 t = Client("192.168.1.199", 3544)
 t.clear()
 #sim = DisplaySimulator(led_data)
-fb = Strobe(led_data)
+fb = RainbowStrobe(led_data)
 
 while True:
     for frame in fb:
