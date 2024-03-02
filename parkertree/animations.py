@@ -12,7 +12,7 @@ class Frame():
 
     def setPixel(self, idx, c):
         try:
-            print(f"Set pixel {idx} to color {c}")
+            #(f"Set pixel {idx} to color {c}")
             self.pixel_data[idx] = c
             return True
         except IndexError:

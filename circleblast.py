@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import time
 
+from parkertree.remote import Client
 from parkertree.simulation import DisplaySimulator
 from parkertree.animations import Colors,CircleBlaster
 from parkertree.datastore import LEDDB
@@ -9,13 +10,16 @@ from parkertree.datastore import LEDDB
 led_db = LEDDB("data/led_db.pickle")
 led_data = led_db.getView(0)
 
-t = DisplaySimulator(led_data)
+t = Client("192.168.1.199", 3544)
+t.clear()
+#sim = DisplaySimulator(led_data)
 fb = CircleBlaster(led_data)
 
 while True:
     for frame in fb:
         s = time.time()
         t.setString(frame.pixel_data)
+       # sim.setString(frame.pixel_data)
         e = time.time()
         continue
         # sleep off however much time is left after displaying the
