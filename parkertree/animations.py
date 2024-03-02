@@ -1,69 +1,9 @@
 import numpy as np
 import time
 import random
+import colorsys
 
 from parkertree.datastore import View
-
-# Animations are iterable for frames.  Frames are a delay value and an array of pixel data
-class Frame():
-    def __init__(self, num_pixels, display_time):
-        self.pixel_data = [ (0,0,0,0) for x in range(num_pixels) ]
-        self.display_time = display_time
-
-    def setPixel(self, idx, c):
-        try:
-            #(f"Set pixel {idx} to color {c}")
-            self.pixel_data[idx] = c
-            return True
-        except IndexError:
-            print(f"Pixel {idx} is not known. Last known is {len(self.pixel_data)}")
-
-    # pass a map, and this frame will transform pixel IDs as indicated.
-    def remap(self, pixelmap):
-        pass
-
-    def reverse(self):
-        self.pixel_data.reverse()
-
-class TwoDFrame():
-    def __init__(self, pixeldata, display_time):
-        self.display_time = display_time
-    
-        self.pixels = {}
-        for pixel in pixeldata:
-            self.pixels[pixel.id] = Colors.BLACK
-        
-    def setPixel(self, pixel_id, color):
-        self.pixels[pixel_id] = color
-        
-    def render(self):
-        self.pixel_data = []
-        i = 0
-        for pix in self.pixels.keys():
-            r = self.pixels[pix][0]
-            g = self.pixels[pix][1]
-            b = self.pixels[pix][2]
-            self.pixel_data.append((pix, r, g, b))
-            
-
-class Colors():
-    RED = (255,0,0)
-    GREEN = (0,192,0)
-    BLUE = (0,0,192)
-    YELLOW = (255,100,0)
-    PURPLE = (192,0,255)
-    WHITE = (255, 255, 255)
-    WARM_WHITE = (255,164,128)
-    BLACK = (0,0,0)
-
-    XMAS_SET = [ RED, GREEN, BLUE, YELLOW, PURPLE ]
-    ALL_RED = [ RED ]
-    ALL_WHITE = [ WARM_WHITE ]
-    RED_GREEN = [ RED, GREEN ]
-    RED_WHITE = [ RED, WHITE ]
-
-    COLORSETS = [ XMAS_SET, ALL_RED, ALL_WHITE, RED_GREEN, RED_WHITE ]
-    
 
 class Animation():
     F32HZ = 0.03125
@@ -93,6 +33,67 @@ class Animation():
 
         return(ret)
 
+class Colors():
+    RED = (255,0,0)
+    DIM_RED = (64,0,0)
+    GREEN = (0,192,0)
+    BLUE = (0,0,192)
+    YELLOW = (255,100,0)
+    PURPLE = (192,0,255)
+    WHITE = (255, 255, 255)
+    COOL_WHITE = (192,255,255)
+    WARM_WHITE = (255,164,128)
+    BLACK = (0,0,0)
+
+    XMAS_SET = [ RED, GREEN, BLUE, YELLOW, PURPLE ]
+    ALL_RED = [ RED ]
+    ALL_WHITE = [ WARM_WHITE ]
+    RED_GREEN = [ RED, GREEN ]
+    RED_WHITE = [ RED, WHITE ]
+
+    COLORSETS = [ XMAS_SET, ALL_RED, ALL_WHITE, RED_GREEN, RED_WHITE ]
+
+# Animations are iterable for frames.  Frames are a delay value and an array of pixel data
+class Frame():
+    def __init__(self, num_pixels, display_time):
+        self.pixel_data = [ (0,0,0,0) for x in range(num_pixels) ]
+        self.display_time = display_time
+
+    def setPixel(self, idx, c):
+        try:
+            #(f"Set pixel {idx} to color {c}")
+            self.pixel_data[idx] = c
+            return True
+        except IndexError:
+            print(f"Pixel {idx} is not known. Last known is {len(self.pixel_data)}")
+
+    # pass a map, and this frame will transform pixel IDs as indicated.
+    def remap(self, pixelmap):
+        pass
+
+    def reverse(self):
+        self.pixel_data.reverse()
+
+class TwoDFrame():
+    def __init__(self, pixeldata, display_time=Animation.F32HZ, color=Colors.BLACK):
+        self.display_time = display_time
+    
+        self.pixels = {}
+        for pixel in pixeldata:
+            self.pixels[pixel.id] = color
+        
+    def setPixel(self, pixel_id, color):
+        self.pixels[pixel_id] = color
+        
+    def render(self):
+        self.pixel_data = []
+        i = 0
+        for pix in self.pixels.keys():
+            r = self.pixels[pix][0]
+            g = self.pixels[pix][1]
+            b = self.pixels[pix][2]
+            self.pixel_data.append((pix, r, g, b))
+
 class TwoDAnimation(Animation):
     def __init__(self, pixeldata, mode="overlay", framerate=Animation.F32HZ):
         self.mode = mode
@@ -109,9 +110,11 @@ class TwoDAnimation(Animation):
     def reset(self):
         self.frames = []
 
-    def drawBlankFrames(self, count):
+    def drawBlankFrames(self, count, color=Colors.BLACK):
         for i in range(count):
-            self.frames.append(TwoDFrame(self.pixels, self.framerate))
+            frame = TwoDFrame(self.pixels, self.framerate, color)
+            self.frames.append(frame)
+
 
     def drawCircle(self, h, k, r, color):
         def inCircle(x, y):
@@ -135,12 +138,24 @@ class TwoDAnimation(Animation):
 
 class CircleBlaster(TwoDAnimation):
     def animate(self):
+        colors = [ Colors.WHITE ] * 10 + [ Colors.DIM_RED ] + [ Colors.COOL_WHITE ] * 2
         for i in range(100):
             x = random.choice(range(self.pixels.max_x))
             y = random.choice(range(self.pixels.max_y))
-            r = random.choice(range(10,300,10))
+            r = random.choice(range(30,150,10))
             self.drawBlankFrames(1)
-            self.drawCircle(x, y, r, Colors.RED)
+            self.drawCircle(x, y, r, random.choice(colors))
+
+class RainbowWipe(TwoDAnimation):
+    def animate(self):
+        h = 0
+        s = 1.0
+        v = 255
+        while True:
+            for h in range(360):
+                r,g,b = colorsys.hsv_to_rgb(h,s,v)
+                self.drawBlankFrames(1, (int(r), int(g), int(b)))
+            
 
 class HorizontalBars(Animation):
     def setColors(colors):
