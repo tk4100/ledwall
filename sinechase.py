@@ -15,7 +15,7 @@ print(led_data)
 #sim = DisplaySimulator(led_data)
 client = Client("192.168.1.199", 3544)
 fb = SineChase(300)
-fb.setColor(Colors.WHITE)
+fb.setColor(Colors.GREEN)
 
 while True:
 	for frame in fb:

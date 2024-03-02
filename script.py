@@ -23,7 +23,7 @@ effects = [
     Strobe(led_data),
     RainbowWipe(led_data),
     RainbowFade(led_data),
-    SineChase(300)
+    #SineChase(300)
     ]
 
 unused_pixels = [ x for x in range(300) ]
