@@ -172,6 +172,8 @@ class RainbowStrobe(TwoDAnimation):
             b = int(b*255)
             color.append((r,g,b))
             
+        color = color + [ (0,0,0) ] * 60    
+        
         for i in range(100):
             self.drawBlankFrames(1, random.choice(color))
 
