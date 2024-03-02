@@ -152,7 +152,24 @@ class CircleBlaster(TwoDAnimation):
         for i in range(100):
             x = random.choice(range(self.pixels.max_x))
             y = random.choice(range(self.pixels.max_y))
-            r = random.choice(range(30,150,10))
+            r = random.choice(range(100,300,10))
+            self.drawBlankFrames(1)
+            self.drawCircle(x, y, r, random.choice(colors))
+
+class RainbowCircleBlaster(TwoDAnimation):
+    def animate(self):
+        colors = []
+        for h in range(360):
+            r,g,b = colorsys.hsv_to_rgb(h/360.,1.0,1)
+            r = int(r*255)
+            g = int(g*255)
+            b = int(b*255)
+            colors.append((r,g,b))
+        
+        for i in range(100):
+            x = random.choice(range(self.pixels.max_x))
+            y = random.choice(range(self.pixels.max_y))
+            r = random.choice(range(100,300,10))
             self.drawBlankFrames(1)
             self.drawCircle(x, y, r, random.choice(colors))
             
@@ -164,18 +181,18 @@ class Strobe(TwoDAnimation):
             
 class RainbowStrobe(TwoDAnimation):
     def animate(self):
-        color = []
+        colors = []
         for h in range(360):
             r,g,b = colorsys.hsv_to_rgb(h/360.,1.0,1)
             r = int(r*255)
             g = int(g*255)
             b = int(b*255)
-            color.append((r,g,b))
+            colors.append((r,g,b))
             
-        color = color + [ (0,0,0) ] * 60    
+        colors = colors + [ (0,0,0) ] * 60    
         
         for i in range(100):
-            self.drawBlankFrames(1, random.choice(color))
+            self.drawBlankFrames(1, random.choice(colors))
 
 class RainbowWipe(TwoDAnimation):
     def animate(self):
@@ -183,13 +200,15 @@ class RainbowWipe(TwoDAnimation):
         s = 1.0
         v = 255/255.
         barwidth = 250
-        for x in range(self.pixels.min_x, self.pixels.max_x, int(barwidth/10)):
-            h = x % 360
-            r,g,b = colorsys.hsv_to_rgb(h/360.,s,v)
-            r = int(r*255)
-            g = int(g*255)
-            b = int(b*255)
-            self.drawVerticalLine(x, barwidth, (r,g,b))
+        loops = 3
+        for Q in range(loops):
+            for x in range(self.pixels.min_x, self.pixels.max_x, int(barwidth/10)):
+                h = x % 360
+                r,g,b = colorsys.hsv_to_rgb(h/360.,s,v)
+                r = int(r*255)
+                g = int(g*255)
+                b = int(b*255)
+                self.drawVerticalLine(x, barwidth, (r,g,b))
     
 class RainbowFade(TwoDAnimation):
     def animate(self):
@@ -214,7 +233,7 @@ class SineChase(Animation):
         self.reset()
 
         frames = 70
-        peaks_per_tree = 50
+        peaks_per_tree = 18
         phase_step_per_pixel = (360 / self.num_pixels) * peaks_per_tree
         phase_step_per_frame = 360 / frames
 
