@@ -2,6 +2,8 @@ import numpy as np
 import time
 import random
 
+from parkertree.datastore import View
+
 # Animations are iterable for frames.  Frames are a delay value and an array of pixel data
 class Frame():
     def __init__(self, num_pixels, display_time):
@@ -9,7 +11,12 @@ class Frame():
         self.display_time = display_time
 
     def setPixel(self, idx, c):
-        self.pixel_data[idx] = c
+        try:
+            print(f"Set pixel {idx} to color {c}")
+            self.pixel_data[idx] = c
+            return True
+        except IndexError:
+            print(f"Pixel {idx} is not known. Last known is {len(self.pixel_data)}")
 
     # pass a map, and this frame will transform pixel IDs as indicated.
     def remap(self, pixelmap):
@@ -17,6 +24,27 @@ class Frame():
 
     def reverse(self):
         self.pixel_data.reverse()
+
+class TwoDFrame():
+    def __init__(self, pixeldata, display_time):
+        self.display_time = display_time
+    
+        self.pixels = {}
+        for pixel in pixeldata:
+            self.pixels[pixel.id] = Colors.BLACK
+        
+    def setPixel(self, pixel_id, color):
+        self.pixels[pixel_id] = color
+        
+    def render(self):
+        self.pixel_data = []
+        i = 0
+        for pix in self.pixels.keys():
+            r = self.pixels[pix][0]
+            g = self.pixels[pix][1]
+            b = self.pixels[pix][2]
+            self.pixel_data.append((pix, r, g, b))
+            
 
 class Colors():
     RED = (255,0,0)
@@ -50,7 +78,7 @@ class Animation():
         self.animate()
 
     def reset(self):
-        self.frames = []
+        self.frames = []   
 
     def __iter__(self):
         self.idx = 0
@@ -64,6 +92,55 @@ class Animation():
             raise StopIteration
 
         return(ret)
+
+class TwoDAnimation(Animation):
+    def __init__(self, pixeldata, mode="overlay", framerate=Animation.F32HZ):
+        self.mode = mode
+        self.framerate = framerate
+    
+        self.loadData(pixeldata)
+        self.reset()
+        self.animate()
+        
+    def loadData(self, pixeldata):
+        assert type(pixeldata) == type(View()), "2D animation requires a View() object.  Did you call leddb.getView())?"
+        self.pixels = pixeldata
+
+    def reset(self):
+        self.frames = []
+
+    def drawBlankFrames(self, count):
+        for i in range(count):
+            self.frames.append(TwoDFrame(self.pixels, self.framerate))
+
+    def drawCircle(self, h, k, r, color):
+        def inCircle(x, y):
+            if (x - h)**2 + (y - k)**2 <= r**2:
+                return True
+            else:
+                return False
+        
+        if len(self.frames) == 0:
+            frame = TwoDFrame(self.pixels, self.framerate)
+        else:
+            frame = self.frames[-1]
+            
+        for pixel in self.pixels:
+            if inCircle(pixel.x, pixel.y):
+                frame.setPixel(pixel.id, color)
+        
+        frame.render()
+        self.frames.append(frame)
+                
+
+class CircleBlaster(TwoDAnimation):
+    def animate(self):
+        for i in range(100):
+            x = random.choice(range(self.pixels.max_x))
+            y = random.choice(range(self.pixels.max_y))
+            r = random.choice(range(10,300,10))
+            self.drawBlankFrames(1)
+            self.drawCircle(x, y, r, Colors.RED)
 
 class HorizontalBars(Animation):
     def setColors(colors):
@@ -97,7 +174,7 @@ class SineChase(Animation):
         for i in range(frames):
             pixels = []
             phase = root_phase
-            frame = Frame(self.num_pixels, Animation.F10HZ)
+            frame = Frame(self.num_pixels, Animation.F32HZ)
             for j in range(self.num_pixels):
                 m = (sin(radians(phase)) + 1) / 2# yields a sinusoid with values between 0 and 1
                 pixel = (j, int(c[0]*m), int(c[1]*m), int(c[2]*m))

@@ -57,6 +57,13 @@ class View():
         else:
             return(False)
 
+    def __setitem__(self, key, value):
+        if key in self.leds.keys():
+            self.leds[key] = value
+        else:
+            print(f"LED ID {key} does not exist in this View()!")
+            raise KeyError
+
     def __iter__(self):
         self.idx = 0
         self.calcRelatives()
