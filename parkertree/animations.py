@@ -75,7 +75,7 @@ class Frame():
         self.pixel_data.reverse()
 
 class TwoDFrame():
-    def __init__(self, pixeldata, display_time=Animation.F32HZ, color=Colors.BLACK):
+    def __init__(self, pixeldata, display_time, color=Colors.BLACK):
         self.display_time = display_time
     
         self.pixels = {}
@@ -113,6 +113,7 @@ class TwoDAnimation(Animation):
     def drawBlankFrames(self, count, color=Colors.BLACK):
         for i in range(count):
             frame = TwoDFrame(self.pixels, self.framerate, color)
+            frame.render()
             self.frames.append(frame)
 
 
@@ -134,6 +135,15 @@ class TwoDAnimation(Animation):
         
         frame.render()
         self.frames.append(frame)
+        
+    def drawVerticalLine(self, x, width, color):
+        frame = TwoDFrame(self.pixels, self.framerate)
+        for pixel in self.pixels:
+            if pixel.x >= x and pixel.x <= x + width:
+                frame.setPixel(pixel.id, color)
+                
+        frame.render()
+        self.frames.append(frame)
                 
 
 class CircleBlaster(TwoDAnimation):
@@ -148,22 +158,34 @@ class CircleBlaster(TwoDAnimation):
 
 class RainbowWipe(TwoDAnimation):
     def animate(self):
-        h = 0
+        h = 55/255.
         s = 1.0
-        v = 255
-        while True:
-            for h in range(360):
-                r,g,b = colorsys.hsv_to_rgb(h,s,v)
-                self.drawBlankFrames(1, (int(r), int(g), int(b)))
-            
-
-class HorizontalBars(Animation):
-    def setColors(colors):
-        self.num_bars = len(colors)
-        self.colors = colors
-        
+        v = 255/255.
+        barwidth = 250
+        for x in range(self.pixels.min_x, self.pixels.max_x, int(barwidth/10)):
+            h = x % 360
+            r,g,b = colorsys.hsv_to_rgb(h/360.,s,v)
+            r = int(r*255)
+            g = int(g*255)
+            b = int(b*255)
+            self.drawVerticalLine(x, barwidth, (r,g,b))
+    
+class RainbowBlast(TwoDAnimation):
     def animate(self):
-        pass
+               
+            self.drawBlankFrames(1, (r,g,b))
+        
+class RainbowFade(TwoDAnimation):
+    def animate(self):
+        h = 55/255.
+        s = 1.0
+        v = 255/255.
+        for h in range(0, 360,10):
+            r,g,b = colorsys.hsv_to_rgb(h/360.,s,v)
+            r = int(r*255)
+            g = int(g*255)
+            b = int(b*255)
+            self.drawBlankFrames(1, (r,g,b))
 
 class SineChase(Animation):
     def setColor(self, color):

@@ -3,7 +3,7 @@ import time
 
 from parkertree.remote import Client
 from parkertree.simulation import DisplaySimulator
-from parkertree.animations import Colors,RainbowWipe
+from parkertree.animations import *
 from parkertree.datastore import LEDDB
 
 # This is a 2d sim, load the data from view 0
@@ -13,7 +13,7 @@ led_data = led_db.getView(0)
 t = Client("192.168.1.199", 3544)
 t.clear()
 #sim = DisplaySimulator(led_data)
-fb = RainbowWipe(led_data)
+fb = RainbowFade(led_data)
 
 while True:
     for frame in fb:
