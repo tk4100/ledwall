@@ -155,6 +155,12 @@ class CircleBlaster(TwoDAnimation):
             r = random.choice(range(30,150,10))
             self.drawBlankFrames(1)
             self.drawCircle(x, y, r, random.choice(colors))
+            
+class Strobe(TwoDAnimation):
+    def animate(self):
+        strobe = [ Colors.COOL_WHITE ] * 10 + [ Colors.BLACK ] * 10
+        for i in range(100):
+            self.drawBlankFrames(1, random.choice(strobe))
 
 class RainbowWipe(TwoDAnimation):
     def animate(self):
