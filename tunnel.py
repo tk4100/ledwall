@@ -10,9 +10,9 @@ from parkertree.datastore import LEDDB
 led_db = LEDDB("data/led_db.pickle")
 led_data = led_db.getView(0)
 
-#t = Client("192.168.1.199", 3544)
-#t.clear()
-t = DisplaySimulator(led_data)
+t = Client("192.168.1.199", 3544)
+t.clear()
+#t = DisplaySimulator(led_data)
 fb = Tunnel(led_data)
 
 while True:
