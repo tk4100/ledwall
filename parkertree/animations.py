@@ -169,6 +169,20 @@ class Lightning(TwoDAnimation):
         for i in range(300):
             self.drawVerticalLine(random.choice(range(self.pixels.min_x, self.pixels.max_x - self.band_width)), self.band_width, random.choice(colors))
 
+class Tunnel(TwoDAnimation):
+    def animate(self):
+        ring_width = 75
+        middle_x = int(self.pixels.max_x - self.pixels.min_x)
+        middle_y = int(self.pixels.max_y - self.pixels.min_y)
+
+        hole_r = 0
+        circle_r = 75
+        while circle_r < self.pixels.max_x and circle_r < self.pixels.max_y:
+            self.drawCircle(middle_x, middle_x, circle_r)
+            self.drawCircle(middle_x, middle_x, hole_r)
+            hole_r += ring_width
+            circle_r += ring_width
+
 class CircleBlaster(TwoDAnimation):
     def animate(self):
         colors = [ Colors.RED ] * 10 + [ Colors.TURQUOISE ] + [ Colors.YELLOW ] * 10
