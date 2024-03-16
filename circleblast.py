@@ -10,9 +10,9 @@ from parkertree.datastore import LEDDB
 led_db = LEDDB("data/led_db.pickle")
 led_data = led_db.getView(0)
 
-t = Client("192.168.1.199", 3544)
-t.clear()
-#t = DisplaySimulator(led_data)
+#t = Client("192.168.1.199", 3544)
+#t.clear()
+t = DisplaySimulator(led_data)
 fb = CircleBlaster(led_data)
 
 while True:
@@ -21,7 +21,7 @@ while True:
         t.setString(frame.pixel_data)
        # sim.setString(frame.pixel_data)
         e = time.time()
-        continue
+        
         # sleep off however much time is left after displaying the
         # last frame
         d = e-s

@@ -27,18 +27,19 @@ class DisplaySimulator():
     def show(self):
         pygame.display.flip()
 
-    def setLed(self, led, r, g, b):
+    def setLed(self, led, r, g, b, show=True):
         try:
             x = self.led_data[led].x + self.dot_dia * 2
             y = self.led_data[led].y + self.dot_dia * 2
         except AttributeError:
             return(False)
         pygame.draw.circle(self.screen, (r,g,b), (x,y), self.dot_dia)
-        self.show()
+        if show:
+            self.show()
         return(True)
 
     # takes an array of tuples (led_id, r, g, b)
     def setString(self, data):
         for led in data:
-            self.setLed(led[0], led[1], led[2], led[3])
+            self.setLed(led[0], led[1], led[2], led[3], False)
         self.show()
