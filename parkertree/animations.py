@@ -171,15 +171,15 @@ class Lightning(TwoDAnimation):
 
 class Tunnel(TwoDAnimation):
     def animate(self):
-        ring_width = 75
-        middle_x = int(self.pixels.max_x - self.pixels.min_x)
-        middle_y = int(self.pixels.max_y - self.pixels.min_y)
+        ring_width = 15
+        middle_x = int((self.pixels.max_x - self.pixels.min_x) / 2) + self.pixels.min_x
+        middle_y = int((self.pixels.max_y - self.pixels.min_y) / 2) + self.pixels.min_y
 
         hole_r = 0
-        circle_r = 75
-        while circle_r < self.pixels.max_x and circle_r < self.pixels.max_y:
-            self.drawCircle(middle_x, middle_x, circle_r)
-            self.drawCircle(middle_x, middle_x, hole_r)
+        circle_r = ring_width
+        while circle_r < self.pixels.max_x - middle_x and circle_r < self.pixels.max_y - middle_y:
+            self.drawCircle(middle_x, middle_x, circle_r, Colors.GOLD)
+            self.drawCircle(middle_x, middle_x, hole_r, Colors.BLACK)
             hole_r += ring_width
             circle_r += ring_width
 
