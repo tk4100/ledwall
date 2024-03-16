@@ -46,11 +46,9 @@ class Colors():
     GOLD = (255,215,0)
     TURQUOISE = (0,192,192)
     BLACK = (0,0,0)
-<<<<<<< HEAD
     TURQUOISE = (0,192,192)
-=======
     PINK = (255,20,147)
->>>>>>> 0a83f38fb55bf4b3f63e8e26f0f54387975236ec
+    LIGHT_BLUE = (64,255,255)
 
     XMAS_SET = [ RED, GREEN, BLUE, YELLOW, PURPLE ]
     ALL_RED = [ RED ]
@@ -163,6 +161,13 @@ class BarBlaster(TwoDAnimation):
                 self.i += 1
                 self.x += self.band_width
             
+class Lightning(TwoDAnimation):
+    def animate(self):
+        colors = [Colors.LIGHT_BLUE, Colors.COOL_WHITE * 5, Colors.BLACK * 35]
+        self.band_width = 75
+        self.x = self.pixels.min_x
+        for i in range(300):
+            self.drawVerticalLine(random.choice(range(self.pixels.min_x, self.pixels.max_x - self.band_width)), self.band_width, random.choice(colors))
 
 class CircleBlaster(TwoDAnimation):
     def animate(self):
