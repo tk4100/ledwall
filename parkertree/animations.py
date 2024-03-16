@@ -43,7 +43,10 @@ class Colors():
     WHITE = (255, 255, 255)
     COOL_WHITE = (192,255,255)
     WARM_WHITE = (255,164,128)
+    GOLD = (255,215,0)
+    TURQUOISE = (0,192,192)
     BLACK = (0,0,0)
+    PINK = (255,20,147)
 
     XMAS_SET = [ RED, GREEN, BLUE, YELLOW, PURPLE ]
     ALL_RED = [ RED ]
@@ -62,7 +65,7 @@ class Frame():
     def setPixel(self, idx, c):
         try:
             #(f"Set pixel {idx} to color {c}")
-            self.pixel_data[idx] = c
+            elf.pixel_data[idx] = c
             return True
         except IndexError:
             print(f"Pixel {idx} is not known. Last known is {len(self.pixel_data)}")
@@ -116,7 +119,6 @@ class TwoDAnimation(Animation):
             frame.render()
             self.frames.append(frame)
 
-
     def drawCircle(self, h, k, r, color):
         def inCircle(x, y):
             if (x - h)**2 + (y - k)**2 <= r**2:
@@ -145,6 +147,18 @@ class TwoDAnimation(Animation):
         frame.render()
         self.frames.append(frame)
                 
+class BarBlaster(TwoDAnimation):
+    def animate(self):
+        colors = [Colors.BLUE, Colors.BLACK, Colors.GOLD, Colors.TURQUOISE, Colors.PINK, Colors.BLACK, Colors.BLACK]
+        self.band_width = 100
+        self.x = self.pixels.min_x
+        for phase in range(5):
+            self.i = phase
+            while self.x + self.band_width < self.pixels.max_x:
+                self.drawVerticalLine(self.x, self.band_width, random.choice(colors))
+                self.i += 1
+                self.x += self.band_width
+            
 
 class CircleBlaster(TwoDAnimation):
     def animate(self):

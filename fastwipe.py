@@ -3,17 +3,17 @@ import time
 
 from parkertree.remote import Client
 from parkertree.simulation import DisplaySimulator
-from parkertree.animations import Colors,FastWipe
+from parkertree.animations import Colors,BarBlaster
 from parkertree.datastore import LEDDB
 
 # This is a 2d sim, load the data from view 0
 led_db = LEDDB("data/led_db.pickle")
 led_data = led_db.getView(0)
 
-#t = Client("192.168.1.199", 3544)
-#t.clear()
-t = DisplaySimulator(led_data)
-fb = FastWipe(led_data)
+t = Client("192.168.1.199", 3544)
+t.clear()
+#t = DisplaySimulator(led_data)
+fb = BarBlaster(led_data)
 
 while True:
     for frame in fb:
