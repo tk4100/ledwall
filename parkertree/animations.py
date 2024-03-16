@@ -44,6 +44,7 @@ class Colors():
     COOL_WHITE = (192,255,255)
     WARM_WHITE = (255,164,128)
     BLACK = (0,0,0)
+    TURQUOISE = (0,192,192)
 
     XMAS_SET = [ RED, GREEN, BLUE, YELLOW, PURPLE ]
     ALL_RED = [ RED ]
@@ -148,7 +149,7 @@ class TwoDAnimation(Animation):
 
 class CircleBlaster(TwoDAnimation):
     def animate(self):
-        colors = [ Colors.WHITE ] * 10 + [ Colors.DIM_RED ] + [ Colors.COOL_WHITE ] * 2
+        colors = [ Colors.RED ] * 10 + [ Colors.TURQUOISE ] + [ Colors.YELLOW ] * 10
         for i in range(100):
             x = random.choice(range(self.pixels.max_x))
             y = random.choice(range(self.pixels.max_y))
