@@ -171,6 +171,7 @@ class Lightning(TwoDAnimation):
 
 class Tunnel(TwoDAnimation):
     def animate(self):
+        self.framerate = Animation.F32HZ
         ring_width = 15
         middle_x = int((self.pixels.max_x - self.pixels.min_x) / 2) + self.pixels.min_x
         middle_y = int((self.pixels.max_y - self.pixels.min_y) / 2) + self.pixels.min_y
