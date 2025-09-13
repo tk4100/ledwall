@@ -67,7 +67,7 @@ class Frame():
     def setPixel(self, idx, c):
         try:
             #(f"Set pixel {idx} to color {c}")
-            elf.pixel_data[idx] = c
+            self.pixel_data[idx] = c
             return True
         except IndexError:
             print(f"Pixel {idx} is not known. Last known is {len(self.pixel_data)}")
@@ -186,6 +186,7 @@ class Tunnel(TwoDAnimation):
 
 class CircleBlaster(TwoDAnimation):
     def animate(self):
+        self.framerate = Animation.F32HZ
         colors = [ Colors.RED ] * 10 + [ Colors.TURQUOISE ] + [ Colors.YELLOW ] * 10
         for i in range(100):
             x = random.choice(range(self.pixels.max_x))

@@ -12,8 +12,8 @@ led_data = led_db.getView(0)
 
 print(led_data)
 
-#sim = DisplaySimulator(led_data)
-client = Client("192.168.1.199", 3544)
+client = DisplaySimulator(led_data)
+#client = Client("192.168.1.199", 3544)
 fb = SineChase(300)
 fb.setColor(Colors.TURQUOISE)
 
